@@ -1,5 +1,5 @@
+import { decode } from 'html-entities';
 import type { QuestionData } from '@/domain/questionsService';
-import { decode } from 'html-entities'
 
 type QuestionProps = {
   question: QuestionData;
@@ -41,11 +41,14 @@ export default function Question({
         <p>{decode(question)}</p>
       </section>
       <section>
-        {options.map((option) => (
-          <button type="button" key={option} onClick={onClickOption(option)}>
-            {option}
-          </button>
-        ))}
+        {options.map((option) => {
+          const id = `${questionNumber}-${option}`;
+          return (
+            <button type="button" key={id} onClick={onClickOption(option)} data-testid={id}>
+              {option}
+            </button>
+          );
+        })}
       </section>
       <footer>
         {questionNumber} of {totalQuestions}

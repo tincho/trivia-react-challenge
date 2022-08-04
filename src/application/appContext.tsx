@@ -2,10 +2,17 @@ import React, { createContext, useMemo, useState } from 'react';
 
 export type ScreenType = 'home' | 'quiz' | 'results';
 
+type ResultsType = {
+  answeredCorrectly: number[];
+  answeredIncorrectly: number[];
+  questions: string[];
+};
+
 export type AppContextType = {
   screen: ScreenType;
+  quizResults: ResultsType;
   onBegin: () => void;
-  onEnd: () => void;
+  onEnd: (results: ResultsType) => void;
   onReset: () => void;
 };
 
@@ -13,20 +20,23 @@ export const AppContext = createContext({} as AppContextType);
 
 export function AppProvider({ children }: React.PropsWithChildren) {
   const [screen, setScreen] = useState<ScreenType>('home');
+  const [quizResults, setQuizResults] = useState<ResultsType>({} as ResultsType);
   const ctx = useMemo(
     () => ({
       screen,
+      quizResults,
       onBegin: () => {
         setScreen('quiz');
       },
-      onEnd: () => {
+      onEnd: (results: ResultsType) => {
         setScreen('results');
+        setQuizResults(results);
       },
       onReset: () => {
         setScreen('home');
       },
     }),
-    [screen],
+    [screen, quizResults],
   );
 
   return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;

@@ -59,7 +59,12 @@ export default function Quiz() {
   if (questions.length && currentQuestion >= questions.length) {
     // eslint-disable-next-line no-debugger
     debugger;
-    onEnd();
+    const { answeredCorrectly, answeredIncorrectly } = state;
+    onEnd({
+      answeredCorrectly,
+      answeredIncorrectly,
+      questions: questions.map((q) => q.question),
+    });
     return null;
   }
 
