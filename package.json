@@ -27,8 +27,10 @@
     }
   },
   "dependencies": {
+    "html-entities": "^2.3.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
