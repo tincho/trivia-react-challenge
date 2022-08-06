@@ -18,11 +18,11 @@ export default function Results() {
           {answeredCorrectly.length} of {questions.length}
         </h3>
       </header>
-      <ul>
+      <ul className="results">
         {questions.map((question, idx) => {
           const mark = isCorrect(idx) ? '+' : '-';
           return (
-            <li>
+            <li key={question}>
               {mark} {decode(question)}
             </li>
           );

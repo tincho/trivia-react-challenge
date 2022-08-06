@@ -1,4 +1,4 @@
-const API_URL = 'https://opentdb.com/api.php?amount=10&difficulty=hard&type=boolean';
+const API_BASE_URL = 'https://opentdb.com/api.php';
 
 const API_RESPONSE_CODES = [
   // 0:
@@ -23,8 +23,25 @@ type ApiResponse = {
   results: QuestionData[];
 };
 
-export async function getQuestions() {
-  const response: ApiResponse = await fetch(API_URL).then((res) => res.json());
+type ApiParams = {
+  amount: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  type: 'boolean' | 'multiple';
+  category?: string;
+};
+
+function paramsToStr(params: ApiParams): string {
+  return Object.entries(params).reduce((str, [key, value]) => `${str}&${key}=${value}`, '');
+}
+
+export async function getQuestions(/* params may be customized in the future */) {
+  const params: ApiParams = {
+    amount: 10,
+    difficulty: 'hard',
+    type: 'boolean',
+  };
+  const url = `${API_BASE_URL}?${paramsToStr(params)}`;
+  const response: ApiResponse = await fetch(url).then((res) => res.json());
   if (response.response_code !== 0) {
     throw new Error(API_RESPONSE_CODES[response.response_code]);
   }

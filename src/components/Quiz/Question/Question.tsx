@@ -16,16 +16,22 @@ const shuffle = <T,>(arr: T[]) =>
     .map(({ value }) => value);
 
 export default function Question({
-  question: { category, question, correct_answer, incorrect_answers },
+  question,
   questionNumber,
   totalQuestions,
   onAnswerCorrectly,
   onAnswerIncorrectly,
 }: QuestionProps) {
-  const options = shuffle([correct_answer, ...incorrect_answers]);
+  const {
+    category,
+    question: questionText,
+    correct_answer: correctAnswer,
+    incorrect_answers: incorrectAnswers,
+  } = question;
+  const options = shuffle([correctAnswer, ...incorrectAnswers]);
 
   const onClickOption = (option: string) => () => {
-    if (option === correct_answer) {
+    if (option === correctAnswer) {
       onAnswerCorrectly();
     } else {
       onAnswerIncorrectly();
@@ -38,7 +44,7 @@ export default function Question({
         <h2>{category}</h2>
       </header>
       <section>
-        <p>{decode(question)}</p>
+        <p>{decode(questionText)}</p>
       </section>
       <section>
         {options.map((option) => {

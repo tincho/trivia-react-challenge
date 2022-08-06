@@ -10,7 +10,6 @@ describe('Home component', () => {
     const btn = container.querySelector('button');
 
     fireEvent.click(btn as HTMLButtonElement);
-
     expect(onBegin).toHaveBeenCalled(); */
   });
 });

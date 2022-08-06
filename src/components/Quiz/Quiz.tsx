@@ -1,17 +1,17 @@
 import { useEffect, useReducer, useContext } from 'react';
 import { AppContext } from '@/application/appContext';
+import { useEffectOnce, Spinner } from '@/application/utils';
+
 import { QuestionData, getQuestions } from '@/domain/questionsService';
-import { questionsReducer, initialValue } from '@/domain/questions';
+import { initialValue, quizReducer } from '@/domain/quizReducer';
 import Question from '@/components/Quiz/Question';
+import ErrorMessage from '@/components/Quiz/ErrorMessage';
 
 export default function Quiz() {
   const { onEnd } = useContext(AppContext);
-  const [state, dispatch] = useReducer(questionsReducer, initialValue);
+  const [state, dispatch] = useReducer(quizReducer, initialValue);
 
-  const setLoading = () =>
-    dispatch({
-      type: 'loading',
-    });
+  const setLoading = () => dispatch({ type: 'loading' });
   const setError = (message: string) =>
     dispatch({
       type: 'error',
@@ -22,16 +22,12 @@ export default function Quiz() {
       type: 'loadQuestions',
       payload,
     });
-  const answerCorrectly = () =>
-    dispatch({
-      type: 'answerCorrectly',
-    });
-  const answerIncorrectly = () =>
-    dispatch({
-      type: 'answerIncorrectly',
-    });
+  const answerCorrectly = () => dispatch({ type: 'answerCorrectly' });
+  const answerIncorrectly = () => dispatch({ type: 'answerIncorrectly' });
 
-  useEffect(() => {
+  const { status } = state;
+
+  useEffectOnce(() => {
     const doFetch = async () => {
       try {
         const questions = await getQuestions();
@@ -40,46 +36,48 @@ export default function Quiz() {
         setError((err as Error).message);
       }
     };
-    setLoading();
-    doFetch();
-  }, []);
+    if (status === 'idle') {
+      setLoading();
+      doFetch();
+    }
+  });
 
-  const { status } = state;
+  const { questions, currentQuestion, answeredCorrectly, answeredIncorrectly } = state;
 
-  if (status === 'loading') {
-    return <p>loadin...</p>;
+  useEffect(() => {
+    if (questions.length && currentQuestion >= questions.length) {
+      onEnd({
+        answeredCorrectly,
+        answeredIncorrectly,
+        questions: questions.map((q) => q.question),
+      });
+    }
+    // this eslint rule is not suitable for this use case
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions.length, currentQuestion]);
+
+  if (['loading', 'idle'].includes(status)) {
+    return <Spinner />;
   }
 
-  const { questions, currentQuestion } = state;
+  if (status === 'error') {
+    return <ErrorMessage message={state.errorMessage} />;
+  }
+
   const question = questions[currentQuestion];
 
-  console.log('***', questions);
-  console.log('***', currentQuestion);
-
-  if (questions.length && currentQuestion >= questions.length) {
-    // eslint-disable-next-line no-debugger
-    debugger;
-    const { answeredCorrectly, answeredIncorrectly } = state;
-    onEnd({
-      answeredCorrectly,
-      answeredIncorrectly,
-      questions: questions.map((q) => q.question),
-    });
-    return null;
+  if (!question) {
+    // quiz ended, redirecting... (you shouldnt see this!)
+    return <Spinner />;
   }
 
   return (
-    <>
-      sarasa
-      {status === 'success' && (
-        <Question
-          totalQuestions={questions.length}
-          questionNumber={currentQuestion + 1}
-          question={question}
-          onAnswerCorrectly={answerCorrectly}
-          onAnswerIncorrectly={answerIncorrectly}
-        />
-      )}
-    </>
+    <Question
+      question={question}
+      totalQuestions={questions.length}
+      questionNumber={currentQuestion + 1}
+      onAnswerCorrectly={answerCorrectly}
+      onAnswerIncorrectly={answerIncorrectly}
+    />
   );
 }
