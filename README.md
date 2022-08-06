@@ -33,6 +33,9 @@ To try it out, just comment or remove the line `type: 'boolean'` from the file `
 
 But, as the scope of the challenge was deliberately narrowed to only True/False questions, I ommited the needed code to parametrize such option from the UI.
 
+All possible answers (the correct one + all the incorrects) are presented in shuffled order. This is why, for some questions you'll see True on the left and False on the right, and for some others you'll see them in reversed position. This looked sighly weird on the first sight but, after all, it's a Trivia game: you have to pay attention! 🙃
+
+
 * Screen/View handling
 
 The app has fundamentally 3 screens: `Home`, `Quiz` and `Results`. As "children" of `Quiz` we have `Question` (and `ErrorMessage`).
@@ -45,9 +48,9 @@ Instead, the `Screen` is handled by an internal state in the `AppContext` "layer
 
 * Fetching the data from a `useEffect` hook inside `Quiz`
 
-This is a de-facto convention which I never got to like entirely. [This recent talk](https://www.youtube.com/watch?v=95B8mnhzoCM) provides a more deep analysis about it. I could have used NextJS (`getStaticProps`) or Remix (`loader`) but for simplicity's sake and showing-off my vainilla-React skills I decided not to.
+This is a de-facto convention which I never got to like entirely. [See this keynote](https://www.youtube.com/watch?v=95B8mnhzoCM) for a more in-depth analysis about it. I could have used NextJS's `getStaticProps()`, Remix's `loader()` (or the upcoming ReactRouter `loader={fn}` prop) but for simplicity's sake, and showing-off my vainilla-React skills I decided not to use any of those libraries.
 
-So this is an approach I'm not totally happy with was good enough for the task.
+So, this is an approach I'm not totally happy with, but was good enough for the task.
 
 
 ## Other considerations
@@ -64,7 +67,7 @@ Keep in mind that, in dev env, [when using `React.StrictMode`, since React v18](
 
 Edit: I **did** implement that approach, see `src/application/utils.tsx`.
 
-The double-mount would have been harmless in production, but in dev, given the API fetch was being done twice, the user would see the first question of the first response for a very short time and immediately it would be replaced by the first question of the **second** response. This was annoying and fixed with the `useEffectOnce` hook.
+The double-mount would have been harmless in production. But in dev, given the API fetch was being done twice, the user would see the first question of the first response for a very short time and immediately it would be replaced by the first question of the **second** response. This was annoying and fixed with the `useEffectOnce` hook.
 
 * Fetch libraries
 

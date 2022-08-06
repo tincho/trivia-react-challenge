@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import type { QuestionData } from './questionsService';
+import type { QuestionData } from '@/domain/questionsService';
 
 export type QuizState = {
   status: 'idle' | 'loading' | 'success' | 'error';

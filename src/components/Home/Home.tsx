@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import { AppContext } from '@/application/appContext';
+import { useAppContext } from '@/application/appContext';
 
 import './Home.css';
 
 export default function Home() {
-  const { onBegin } = useContext(AppContext);
+  const { onBegin } = useAppContext();
 
   return (
     <div className="home">

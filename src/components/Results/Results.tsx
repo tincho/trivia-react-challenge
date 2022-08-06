@@ -1,12 +1,11 @@
 import { decode } from 'html-entities';
-import { useContext } from 'react';
-import { AppContext } from '@/application/appContext';
+import { useAppContext } from '@/application/appContext';
 
 export default function Results() {
   const {
     quizResults: { answeredCorrectly, questions },
     onReset,
-  } = useContext(AppContext);
+  } = useAppContext();
 
   const isCorrect = (idx: number) => answeredCorrectly.includes(idx);
 
@@ -28,7 +27,7 @@ export default function Results() {
           );
         })}
       </ul>
-      <button type="button" onClick={onReset}>
+      <button type="button" onClick={onReset} className="btn--play-again">
         play again?
       </button>
     </>

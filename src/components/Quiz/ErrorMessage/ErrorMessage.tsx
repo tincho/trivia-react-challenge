@@ -1,13 +1,14 @@
-import { useContext } from 'react';
-import { AppContext } from '@/application/appContext';
+type ErrorMessageProps = {
+  message?: string;
+  goHome?: () => void;
+};
 
-export default function ErrorMessage({ message }: { message?: string }) {
-  const { onReset } = useContext(AppContext);
+export default function ErrorMessage({ message, goHome }: ErrorMessageProps) {
   return (
     <div>
       <h2>An error has occurred</h2>
       <pre>{message}</pre>
-      <button type="button" onClick={onReset}>
+      <button type="button" onClick={goHome}>
         Go back Home
       </button>
     </div>
@@ -15,4 +16,5 @@ export default function ErrorMessage({ message }: { message?: string }) {
 }
 ErrorMessage.defaultProps = {
   message: '',
+  goHome: () => {},
 };

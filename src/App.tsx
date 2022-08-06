@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { AppProvider, AppContext, ScreenType } from '@/application/appContext';
+import React from 'react';
+import { AppProvider, ScreenType, useAppContext } from '@/application/appContext';
 
 import Home from '@/components/Home';
 import Quiz from '@/components/Quiz';
@@ -14,7 +14,7 @@ const screens: Record<ScreenType, React.FunctionComponent> = {
 };
 
 function AppContent() {
-  const { screen } = useContext(AppContext);
+  const { screen } = useAppContext();
   const Screen = screens[screen];
   return <Screen />;
 }

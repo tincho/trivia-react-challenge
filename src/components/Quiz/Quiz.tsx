@@ -1,31 +1,29 @@
-import { useEffect, useReducer, useContext } from 'react';
-import { AppContext } from '@/application/appContext';
+import { useAppContext } from '@/application/appContext';
 import { useEffectOnce, Spinner } from '@/application/utils';
 
-import { QuestionData, getQuestions } from '@/domain/questionsService';
-import { initialValue, quizReducer } from '@/domain/quizReducer';
+import { getQuestions } from '@/domain/questionsService';
+import { useQuiz } from '@/domain/quiz';
+
 import Question from '@/components/Quiz/Question';
 import ErrorMessage from '@/components/Quiz/ErrorMessage';
 
 export default function Quiz() {
-  const { onEnd } = useContext(AppContext);
-  const [state, dispatch] = useReducer(quizReducer, initialValue);
+  const { onEnd, onReset } = useAppContext();
 
-  const setLoading = () => dispatch({ type: 'loading' });
-  const setError = (message: string) =>
-    dispatch({
-      type: 'error',
-      payload: message,
-    });
-  const loadQuestions = (payload: QuestionData[]) =>
-    dispatch({
-      type: 'loadQuestions',
-      payload,
-    });
-  const answerCorrectly = () => dispatch({ type: 'answerCorrectly' });
-  const answerIncorrectly = () => dispatch({ type: 'answerIncorrectly' });
-
-  const { status } = state;
+  const {
+    status,
+    setLoading,
+    setError,
+    errorMessage,
+    loadQuestions,
+    question,
+    questionNumber,
+    totalQuestions,
+    onAnswerCorrectly,
+    onAnswerIncorrectly,
+  } = useQuiz({
+    onEnd,
+  });
 
   useEffectOnce(() => {
     const doFetch = async () => {
@@ -42,29 +40,13 @@ export default function Quiz() {
     }
   });
 
-  const { questions, currentQuestion, answeredCorrectly, answeredIncorrectly } = state;
-
-  useEffect(() => {
-    if (questions.length && currentQuestion >= questions.length) {
-      onEnd({
-        answeredCorrectly,
-        answeredIncorrectly,
-        questions: questions.map((q) => q.question),
-      });
-    }
-    // this eslint rule is not suitable for this use case
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions.length, currentQuestion]);
-
   if (['loading', 'idle'].includes(status)) {
     return <Spinner />;
   }
 
   if (status === 'error') {
-    return <ErrorMessage message={state.errorMessage} />;
+    return <ErrorMessage message={errorMessage} goHome={onReset} />;
   }
-
-  const question = questions[currentQuestion];
 
   if (!question) {
     // quiz ended, redirecting... (you shouldnt see this!)
@@ -74,10 +56,10 @@ export default function Quiz() {
   return (
     <Question
       question={question}
-      totalQuestions={questions.length}
-      questionNumber={currentQuestion + 1}
-      onAnswerCorrectly={answerCorrectly}
-      onAnswerIncorrectly={answerIncorrectly}
+      totalQuestions={totalQuestions}
+      questionNumber={questionNumber}
+      onAnswerCorrectly={onAnswerCorrectly}
+      onAnswerIncorrectly={onAnswerIncorrectly}
     />
   );
 }

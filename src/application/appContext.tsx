@@ -1,8 +1,8 @@
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 export type ScreenType = 'home' | 'quiz' | 'results';
 
-type ResultsType = {
+export type ResultsType = {
   answeredCorrectly: number[];
   answeredIncorrectly: number[];
   questions: string[];
@@ -42,4 +42,4 @@ export function AppProvider({ children }: React.PropsWithChildren) {
   return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;
 }
 
-export default AppContext;
+export const useAppContext = () => useContext(AppContext);

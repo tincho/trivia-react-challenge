@@ -27,3 +27,7 @@
 ul.results {
   list-style: none;
 }
+
+.btn--play-again {
+  text-transform: uppercase;
+}
