@@ -22,6 +22,11 @@ type QuizHookAPI = {
   onAnswer: (answer: string) => void;
 };
 
+/**
+ * useQuiz hook
+ * @param {Function} onEnd fn to be exec when the final question gets answered
+ * @returns {QuizHookAPI} some info an fns to interact with the Quiz State
+ */
 export const useQuiz = ({ onEnd }: QuizHookArgs): QuizHookAPI => {
   const [quizState, dispatch] = useReducer(quizReducer, initialValue);
 

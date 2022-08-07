@@ -25,6 +25,20 @@ Sample returned JSON:
 
 ## Design decisions
 
+* "Kind of" Clean Architecture
+
+I focused first and foremost on the concept of **decoupling**. Being a frontend app, the main focus of it lies on decoupling logic from UI. Up to some point - and if used properly -, React is great for this end.
+
+So I tried to keep most of the UI components as dumb as possible, getting their data from hooks and painting the screens.
+
+But, the `domain` and `application` layers are not 100% decoupled from the framework API, specifically React's Context and native hooks like useReducer. 
+
+The most nuclear and important logic of the app can be found inside **`src/domain/quiz.tsx`** file. It's expressed as a React custom hook called `useHook`. It uses a pure reducer, sitting in a file next to it: `quizReducer.tsx`. You can see this hook as the interface to the store/state of the core entity: `Quiz`('s state).
+
+So this resulted in a very unorthodox and minimalistic implementation of the famous  [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). There are no `ports` nor `adapters`, and components like **`src/components/Quiz`** mix up to some degree app logic with UI, mainly to call the API service, push it up to the `domain/quiz` store/"repository", then render a single `Question` depending on it's (Quiz's) state. 
+
+Given the size and scope of this app (and after all, it's a coding challenge and not an enterprise-grade commercial app!), I choose to "cut corners", keep some "dependency" with the framework's API and not adding extra code for ports and adapters to keep it the purest and cleanest.
+
 * Question type: boolean / multiple choice. 
 
 OpenTDB provides both type of questions and the API response has the same structure for either. So I implemented `Question` component in a way that could equally handle both kinds of questions. 
