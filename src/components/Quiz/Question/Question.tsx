@@ -5,8 +5,7 @@ type QuestionProps = {
   question: QuestionData;
   totalQuestions: number;
   questionNumber: number;
-  onAnswerCorrectly: () => void;
-  onAnswerIncorrectly: () => void;
+  onAnswer: (option: string) => void;
 };
 
 const shuffle = <T,>(arr: T[]) =>
@@ -15,13 +14,7 @@ const shuffle = <T,>(arr: T[]) =>
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
 
-export default function Question({
-  question,
-  questionNumber,
-  totalQuestions,
-  onAnswerCorrectly,
-  onAnswerIncorrectly,
-}: QuestionProps) {
+export default function Question({ question, questionNumber, totalQuestions, onAnswer }: QuestionProps) {
   const {
     category,
     question: questionText,
@@ -31,11 +24,7 @@ export default function Question({
   const options = shuffle([correctAnswer, ...incorrectAnswers]);
 
   const onClickOption = (option: string) => () => {
-    if (option === correctAnswer) {
-      onAnswerCorrectly();
-    } else {
-      onAnswerIncorrectly();
-    }
+    onAnswer(option);
   };
 
   return (

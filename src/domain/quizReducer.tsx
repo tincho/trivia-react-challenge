@@ -5,6 +5,7 @@ export type QuizState = {
   status: 'idle' | 'loading' | 'success' | 'error';
   errorMessage: string;
   questions: QuestionData[] | Array<never>;
+  answers: string[];
   currentQuestion: number;
   answeredCorrectly: number[];
   answeredIncorrectly: number[];
@@ -19,6 +20,7 @@ export const initialValue: QuizState = {
   status: 'idle',
   errorMessage: '',
   questions: [],
+  answers: [],
   currentQuestion: 0,
   answeredCorrectly: [],
   answeredIncorrectly: [],
@@ -47,19 +49,21 @@ export const quizReducer: Reducer<QuizState, QuizStateAction> = (state, action) 
         errorMessage: payload as string,
       };
     case 'answerCorrectly': {
-      const { questions, currentQuestion, answeredCorrectly } = state;
+      const { questions, currentQuestion, answeredCorrectly, answers } = state;
       return {
         ...state,
         currentQuestion: Math.min(questions.length, currentQuestion + 1),
         answeredCorrectly: [...answeredCorrectly, currentQuestion],
+        answers: [...answers, payload as string],
       };
     }
     case 'answerIncorrectly': {
-      const { questions, currentQuestion, answeredIncorrectly } = state;
+      const { questions, currentQuestion, answeredIncorrectly, answers } = state;
       return {
         ...state,
         currentQuestion: Math.min(questions.length, currentQuestion + 1),
         answeredIncorrectly: [...answeredIncorrectly, currentQuestion],
+        answers: [...answers, payload as string],
       };
     }
     case 'reset':

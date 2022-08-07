@@ -19,8 +19,7 @@ type QuizHookAPI = {
   question: QuestionData;
   questionNumber: number;
   totalQuestions: number;
-  onAnswerCorrectly: () => void;
-  onAnswerIncorrectly: () => void;
+  onAnswer: (answer: string) => void;
 };
 
 export const useQuiz = ({ onEnd }: QuizHookArgs): QuizHookAPI => {
@@ -37,10 +36,9 @@ export const useQuiz = ({ onEnd }: QuizHookArgs): QuizHookAPI => {
       type: 'loadQuestions',
       payload,
     });
-  const onAnswerCorrectly = () => dispatch({ type: 'answerCorrectly' });
-  const onAnswerIncorrectly = () => dispatch({ type: 'answerIncorrectly' });
 
-  const { questions, currentQuestion, answeredCorrectly, answeredIncorrectly, status, errorMessage } = quizState;
+  const { questions, currentQuestion, answers, answeredCorrectly, answeredIncorrectly, status, errorMessage } =
+    quizState;
 
   useEffect(() => {
     if (questions.length && currentQuestion >= questions.length) {
@@ -48,11 +46,22 @@ export const useQuiz = ({ onEnd }: QuizHookArgs): QuizHookAPI => {
         answeredCorrectly,
         answeredIncorrectly,
         questions: questions.map((q) => q.question),
+        answers,
       });
     }
     // this eslint rule is not suitable for this use case
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions.length, currentQuestion]);
+
+  const question = questions[currentQuestion];
+
+  const onAnswer = (answer: string) => {
+    const isCorrect = answer === question.correct_answer;
+    dispatch({
+      type: isCorrect ? 'answerCorrectly' : 'answerIncorrectly',
+      payload: answer,
+    });
+  };
 
   return {
     status,
@@ -60,10 +69,9 @@ export const useQuiz = ({ onEnd }: QuizHookArgs): QuizHookAPI => {
     setError,
     errorMessage,
     loadQuestions,
-    question: questions[currentQuestion],
+    question,
     questionNumber: currentQuestion + 1,
     totalQuestions: questions.length,
-    onAnswerCorrectly,
-    onAnswerIncorrectly,
+    onAnswer,
   };
 };

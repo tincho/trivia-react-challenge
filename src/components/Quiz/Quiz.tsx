@@ -19,8 +19,7 @@ export default function Quiz() {
     question,
     questionNumber,
     totalQuestions,
-    onAnswerCorrectly,
-    onAnswerIncorrectly,
+    onAnswer,
   } = useQuiz({
     onEnd,
   });
@@ -54,12 +53,6 @@ export default function Quiz() {
   }
 
   return (
-    <Question
-      question={question}
-      totalQuestions={totalQuestions}
-      questionNumber={questionNumber}
-      onAnswerCorrectly={onAnswerCorrectly}
-      onAnswerIncorrectly={onAnswerIncorrectly}
-    />
+    <Question question={question} totalQuestions={totalQuestions} questionNumber={questionNumber} onAnswer={onAnswer} />
   );
 }
