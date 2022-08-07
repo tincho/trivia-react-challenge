@@ -27,20 +27,25 @@ type ApiParams = {
   amount: number;
   difficulty: 'easy' | 'medium' | 'hard';
   type: 'boolean' | 'multiple';
-  category?: string;
+  category?: number;
 };
 
 function paramsToStr(params: ApiParams): string {
-  return Object.entries(params).reduce((str, [key, value]) => `${str}&${key}=${value}`, '');
+  return Object.entries(params)
+    .reduce((urlParams: string[], [key, value]) => [...urlParams, `${key}=${value}`], [])
+    .join('&');
 }
 
-export async function getQuestions(/* params may be customized in the future */) {
-  const params: ApiParams = {
+export async function getQuestions(params: Partial<ApiParams> = {}) {
+  const defaultParams: ApiParams = {
     amount: 10,
     difficulty: 'hard',
     type: 'boolean',
   };
-  const url = `${API_BASE_URL}?${paramsToStr(params)}`;
+  const url = `${API_BASE_URL}?${paramsToStr({
+    ...defaultParams,
+    ...params,
+  })}`;
   const response: ApiResponse = await fetch(url).then((res) => res.json());
   if (response.response_code !== 0) {
     throw new Error(API_RESPONSE_CODES[response.response_code]);
