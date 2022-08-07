@@ -10,6 +10,8 @@ export type ResultsType = {
 };
 
 export type AppContextType = {
+  questionsCount: number;
+  questionsType?: 'boolean' | 'multiple';
   screen: ScreenType;
   quizResults: ResultsType;
   onBegin: () => void;
@@ -24,6 +26,8 @@ export function AppProvider({ children }: React.PropsWithChildren) {
   const [quizResults, setQuizResults] = useState<ResultsType>({} as ResultsType);
   const ctx = useMemo(
     () => ({
+      questionsCount: 10,
+      questionsType: 'boolean' as const,
       screen,
       quizResults,
       onBegin: () => {

@@ -8,7 +8,7 @@ import Question from '@/components/Quiz/Question';
 import ErrorMessage from '@/components/Quiz/ErrorMessage';
 
 export default function Quiz() {
-  const { onEnd, onReset } = useAppContext();
+  const { onEnd, onReset /* questionsType, questionsCount */ } = useAppContext();
 
   const {
     status,
@@ -27,7 +27,7 @@ export default function Quiz() {
   useEffectOnce(() => {
     const doFetch = async () => {
       try {
-        const questions = await getQuestions();
+        const questions = await getQuestions(/* { amount: questionsCount, type: questionsType } */);
         loadQuestions(questions);
       } catch (err) {
         setError((err as Error).message);
