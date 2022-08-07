@@ -6,6 +6,7 @@ export type ResultsType = {
   answeredCorrectly: number[];
   answeredIncorrectly: number[];
   questions: string[];
+  answers: string[];
 };
 
 export type AppContextType = {

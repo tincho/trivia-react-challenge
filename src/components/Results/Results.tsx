@@ -3,7 +3,7 @@ import { useAppContext } from '@/application/appContext';
 
 export default function Results() {
   const {
-    quizResults: { answeredCorrectly, questions },
+    quizResults: { answeredCorrectly, questions, answers },
     onReset,
   } = useAppContext();
 
@@ -23,6 +23,8 @@ export default function Results() {
           return (
             <li key={question}>
               {mark} {decode(question)}
+              <br />
+              (You answered: {answers[idx]})
             </li>
           );
         })}

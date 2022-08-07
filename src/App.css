@@ -4,6 +4,21 @@
   padding: 2rem;
   text-align: center;
 }
+
+ul.results {
+  list-style: none;
+}
+
+.btn--play-again {
+  text-transform: uppercase;
+}
+
+/**
+
+thanks to Miguel Angel, a great youtuber
+https://midu.dev/como-crear-un-spinner-con-css/
+
+*/
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
   width: 36px;
@@ -22,12 +37,4 @@
   100% {
     transform: rotate(360deg);
   }
-}
-
-ul.results {
-  list-style: none;
-}
-
-.btn--play-again {
-  text-transform: uppercase;
 }
