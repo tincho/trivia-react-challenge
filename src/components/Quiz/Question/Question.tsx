@@ -1,6 +1,8 @@
 import { decode } from 'html-entities';
 import type { QuestionData } from '@/domain/questionsService';
 
+import './Question.css';
+
 type QuestionProps = {
   question: QuestionData;
   totalQuestions: number;
@@ -32,10 +34,10 @@ export default function Question({ question, questionNumber, totalQuestions, onA
       <header>
         <h2>{category}</h2>
       </header>
-      <section>
+      <section className="question">
         <p>{decode(questionText)}</p>
       </section>
-      <section>
+      <section className="options">
         {options.map((option) => {
           const id = `${questionNumber}-${option}`;
           return (

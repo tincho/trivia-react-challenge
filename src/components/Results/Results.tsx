@@ -1,6 +1,8 @@
 import { decode } from 'html-entities';
 import { useAppContext } from '@/application/appContext';
 
+import './Results.css';
+
 export default function Results() {
   const {
     quizResults: { answeredCorrectly, questions, answers },
@@ -13,22 +15,27 @@ export default function Results() {
     <>
       <header>
         <h2>You scored</h2>
-        <h3>
+        <h3 data-testid="score">
           {answeredCorrectly.length} of {questions.length}
         </h3>
       </header>
-      <ul className="results">
+      <section className="results">
         {questions.map((question, idx) => {
-          const mark = isCorrect(idx) ? '+' : '-';
+          const correct = isCorrect(idx);
+          const mark = correct ? '+' : '-';
           return (
-            <li key={question}>
-              {mark} {decode(question)}
-              <br />
-              (You answered: {answers[idx]})
-            </li>
+            <article key={question}>
+              <div className="results-question">
+                <span className="mark">{mark}</span>
+                {decode(question)}
+              </div>
+              <div className={`answer ${correct ? 'answer--correct' : 'answer--incorrect'}`}>
+                (You answered: {answers[idx]})
+              </div>
+            </article>
           );
         })}
-      </ul>
+      </section>
       <button type="button" onClick={onReset} className="btn--play-again">
         play again?
       </button>

@@ -1,0 +1,17 @@
+.question {
+  padding: 5% 15%;
+}
+.question p {
+  padding: 10%;
+  border: 1px solid gray;
+  margin: auto;
+}
+
+.options {
+  margin: 20px 10px;
+}
+
+.options button {
+  margin: 5px;
+  border: 1px solid black;
+}

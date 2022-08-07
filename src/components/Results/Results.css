@@ -1,0 +1,36 @@
+.results {
+  padding: 5% 15%;
+}
+
+.results article {
+  margin-bottom: 15px;
+}
+
+.results .results-question {
+  display: flex;
+  flex-direction: row;
+  align-items:initial;
+  text-align: left;
+}
+
+.results .mark {
+  font-size: 2rem;
+  min-width: 10%;
+  text-align: center;
+}
+
+.answer {
+  display: block;
+  text-align: right;
+  font-size: x-small;
+}
+.answer--correct {
+  color: green;
+}
+.answer--incorrect {
+  color: red;
+}
+
+.btn--play-again {
+  text-transform: uppercase;
+}
