@@ -6,22 +6,26 @@ Sample returned JSON:
 
 ```json
 {
-    "response_code": 0,
-    "results": [
-        {
-            "category": "Entertainment: Video Games",
-            "type": "boolean",
-            "difficulty": "hard",
-            "question": "Unturned originally started as a Roblox game.",
-            "correct_answer": "True",
-            "incorrect_answers": [
-                "False"
-            ]
-        }, 
-        "...etc"
-    ]
+  "response_code": 0,
+  "results": [
+    {
+      "category": "Entertainment: Video Games",
+      "type": "boolean",
+      "difficulty": "hard",
+      "question": "Unturned originally started as a Roblox game.",
+      "correct_answer": "True",
+      "incorrect_answers": [
+        "False"
+      ]
+    }, 
+    "...etc"
+  ]
 }
 ```
+
+## Live demo
+
+See it deployed at https://trivia-react-challenge.vercel.app
 
 ## Design decisions
 
@@ -31,21 +35,21 @@ I focused first and foremost on the concept of **decoupling**. Being a frontend 
 
 So I tried to keep most of the UI components as dumb as possible, getting their data from hooks and painting the screens.
 
-But, the `domain` and `application` layers are not 100% decoupled from the framework API, specifically React's Context and native hooks like useReducer. 
+But, the `domain` and `application` layers are not 100% decoupled from the framework API, specifically React's Context and native hooks like `useReducer`. 
 
-The most nuclear and important logic of the app can be found inside **`src/domain/quiz.tsx`** file. It's expressed as a React custom hook called `useHook`. It uses a pure reducer, sitting in a file next to it: `quizReducer.tsx`. You can see this hook as the interface to the store/state of the core entity: `Quiz`('s state).
+The most nuclear and important logic of the app can be found inside **`src/domain/quiz.tsx`** file. It's modeled as a React custom hook called `useQuiz`. It uses a pure reducer from a file sitting next to it: `quizReducer.tsx`. You can see this hook as the interface to the store/state of the core entity: `Quiz`('s state).
 
-So this resulted in a very unorthodox and minimalistic implementation of the famous  [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). There are no `ports` nor `adapters`, and components like **`src/components/Quiz`** mix up to some degree app logic with UI, mainly to call the API service, push it up to the `domain/quiz` store/"repository", then render a single `Question` depending on it's (Quiz's) state. 
+So this resulted in a very unorthodox and minimalistic implementation of the famous  [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). There are no `ports` nor `adapters`, and components like **`src/components/Quiz`** mix up to some degree app logic with UI, mainly to call the API service, push it up to the `domain/quiz` store/"repository", then render a single `Question` depending on it's (Quiz's) state. You can see `Quiz` as a `QuestionWrapper`/enhancer. Question is kept dumb and totally decoupled from any app logic, recieving everything in props from Quiz, which handles everything.
 
-Given the size and scope of this app (and after all, it's a coding challenge and not an enterprise-grade commercial app!), I choose to "cut corners", keep some "dependency" with the framework's API and not adding extra code for ports and adapters to keep it the purest and cleanest.
+Given the size and scope of this app (and after all, it's a coding challenge and not an enterprise-grade commercial app!), I choose to "cut corners", keep some "dependency" with the framework's API and not adding extra code that would make it the purest and cleanest (i.e. extra layers).
 
 * Question type: boolean / multiple choice. 
 
 OpenTDB provides both type of questions and the API response has the same structure for either. So I implemented `Question` component in a way that could equally handle both kinds of questions. 
 
-To try it out, just comment or remove the line `type: 'boolean'` from the file `src/domain/questionsService` and it will work just as fine! - this is done this way to show the decoupling between the data/domain "layer" from the UI.
+To try this out, just add some `ApiParams` (see `src/domain/questionsService`) in the useEffect code where **`components/Quiz/Quiz`** calls `getQuestions()`. You can change the number of questions, the difficulty and the type. It will work just fine! 🎉🎉 - this is done this way to show the decoupling between the data/domain "layer" from the UI.
 
-But, as the scope of the challenge was deliberately narrowed to only True/False questions, I ommited the needed code to parametrize such option from the UI.
+As the scope of the challenge was deliberately narrowed to only True/False questions, I ommited the needed code to parametrize such option from the UI. But it would be extremely easy to add handling the state for those params inside `src/application/appContext`.
 
 All possible answers (the correct one + all the incorrects) are presented in shuffled order. This is why, for some questions you'll see True on the left and False on the right, and for some others you'll see them in reversed position. This looked sighly weird on the first sight but, after all, it's a Trivia game: you have to pay attention! 🙃
 
