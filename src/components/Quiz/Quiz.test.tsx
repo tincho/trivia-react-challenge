@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import Quiz, { QuizView } from './Quiz';
 
 const mockOnEnd = jest.fn();
@@ -17,6 +17,7 @@ const loadQuestionsMock: jest.Mock = jest.fn();
 const onAnswerMock: jest.Mock = jest.fn();
 jest.mock('@/domain/quiz', () => ({
   useQuiz: () => ({
+    status: 'idle',
     setLoading: mockSetLoading,
     setError: setErrorMock,
     loadQuestions: loadQuestionsMock,
@@ -24,10 +25,16 @@ jest.mock('@/domain/quiz', () => ({
   }),
 }));
 
-const mockGetQuesions = jest.fn();
+const mockGetQuesions = jest.fn(() =>
+  Promise.resolve([
+    {
+      question: 'Mocked!',
+    },
+  ]),
+);
 jest.mock('@/domain/questionsService', () => {
   const exps = {
-    getQuestions: async (...args: any[]) => mockGetQuesions(...args),
+    getQuestions: () => mockGetQuesions(),
   };
   return exps;
 });
@@ -66,7 +73,8 @@ describe('Quiz view', () => {
       onAnswer: (a: string) => {},
     };
     const { container } = render(<QuizView {...props} />);
-    expect(container.querySelector('.spinner')).toBeInTheDocument();  });
+    expect(container.querySelector('.spinner')).toBeInTheDocument();
+  });
   test('should show ErrorMessage on error', async () => {
     const props = {
       status: 'error' as const,
@@ -94,5 +102,22 @@ describe('Quiz view', () => {
     const { container } = render(<QuizView {...props} />);
 
     expect(container.querySelector('.question')?.textContent).toBe(mockQuestion.question);
+  });
+});
+
+describe('Quiz (wrapper)', () => {
+  test('should call getQuestions', async () => {
+    render(<Quiz />);
+    await waitFor(() => expect(mockGetQuesions).toHaveBeenCalledTimes(1));
+  });
+  test('should call loadQuestions', async () => {
+    render(<Quiz />);
+    await waitFor(() =>
+      expect(loadQuestionsMock).toHaveBeenCalledWith([
+        {
+          question: 'Mocked!',
+        },
+      ]),
+    );
   });
 });
