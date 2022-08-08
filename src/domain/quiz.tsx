@@ -5,13 +5,13 @@ import type { ResultsType } from '@/application/appContext';
 
 import type { QuestionData } from '@/domain/questionsService';
 
-import { initialValue, quizReducer } from '@/domain/quizReducer';
+import { initialValue, quizReducer, QuizState } from '@/domain/quizReducer';
 
 type QuizHookArgs = {
   onEnd: (quizResults: ResultsType) => void;
 };
 type QuizHookAPI = {
-  status: string;
+  status: QuizState['status'];
   errorMessage: string;
   setLoading: () => void;
   setError: (message: string) => void;

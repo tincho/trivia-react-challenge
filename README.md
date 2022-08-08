@@ -39,7 +39,9 @@ But, the `domain` and `application` layers are not 100% decoupled from the frame
 
 The most nuclear and important logic of the app can be found inside **`src/domain/quiz.tsx`** file. It's modeled as a React custom hook called `useQuiz`. It uses a pure reducer from a file sitting next to it: `quizReducer.tsx`. You can see this hook as the interface to the store/state of the core entity: `Quiz`('s state).
 
-So this resulted in a very unorthodox and minimalistic implementation of the famous  [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). There are no `ports` nor `adapters`, and components like **`src/components/Quiz`** mix up to some degree app logic with UI, mainly to call the API service, push it up to the `domain/quiz` store/"repository", then render a single `Question` depending on it's (Quiz's) state. You can see `Quiz` as a `QuestionWrapper`/enhancer. Question is kept dumb and totally decoupled from any app logic, recieving everything in props from Quiz, which handles everything.
+So this resulted in a very unorthodox and minimalistic implementation of the famous  [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html). 
+
+There are no `ports` nor `adapters`, only a slight decoupling in components like **`src/components/Quiz`** and **`src/components/Results`**, where a wrapper/enhancer/decorator component handles the logic and pass the relevant props to the bare-view component.
 
 Given the size and scope of this app (and after all, it's a coding challenge and not an enterprise-grade commercial app!), I choose to "cut corners", keep some "dependency" with the framework's API and not adding extra code that would make it the purest and cleanest (i.e. extra layers).
 
@@ -90,6 +92,10 @@ The double-mount would have been harmless in production. But in dev, given the A
 * Fetch libraries
 
 I'm very fond of using `useSWR` and/or `axios`. But since there's only one fetch per-run in this app, using bare native `fetch` seemed enough.
+
+* Extra feature: include user answers in Results view
+
+This wasn't included in the 
 
 
 ## Usage

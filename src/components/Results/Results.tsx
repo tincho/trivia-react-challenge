@@ -3,25 +3,28 @@ import { useAppContext } from '@/application/appContext';
 
 import './Results.css';
 
-export default function Results() {
-  const {
-    quizResults: { answeredCorrectly, questions, answers },
-    onReset,
-  } = useAppContext();
+type ResultsQuestion = {
+  question: string;
+  answer: string;
+  correct: boolean;
+};
+type ResultsViewProps = {
+  score: number;
+  questions?: ResultsQuestion[];
+  playAgain: () => void;
+};
 
-  const isCorrect = (idx: number) => answeredCorrectly.includes(idx);
-
+function ResultsView({ score, questions = [], playAgain }: ResultsViewProps) {
   return (
     <>
       <header>
         <h2>You scored</h2>
         <h3 data-testid="score">
-          {answeredCorrectly.length} of {questions.length}
+          {score} of {questions.length}
         </h3>
       </header>
       <section className="results">
-        {questions.map((question, idx) => {
-          const correct = isCorrect(idx);
+        {questions.map(({ question, answer, correct }) => {
           const mark = correct ? '+' : '-';
           return (
             <article key={question}>
@@ -30,15 +33,39 @@ export default function Results() {
                 {decode(question)}
               </div>
               <div className={`answer ${correct ? 'answer--correct' : 'answer--incorrect'}`}>
-                (You answered: {answers[idx]})
+                (You answered: {answer})
               </div>
             </article>
           );
         })}
       </section>
-      <button type="button" onClick={onReset} className="btn--play-again">
+      <button type="button" onClick={playAgain} className="btn--play-again">
         play again?
       </button>
     </>
   );
+}
+ResultsView.defaultProps = {
+  questions: [] as const,
+};
+
+/**
+ * reads data & methods from App Context and injects them into (dumb) ResultsView
+ * @returns {ReactNode} ResultsView
+ */
+export default function Results() {
+  const {
+    quizResults: { answeredCorrectly, questions, answers },
+    onReset,
+  } = useAppContext();
+
+  const isCorrect = (idx: number) => answeredCorrectly.includes(idx);
+
+  const questionsData = questions.map((question, idx) => ({
+    question,
+    answer: answers[idx],
+    correct: isCorrect(idx),
+  }));
+
+  return <ResultsView score={answeredCorrectly.length} questions={questionsData} playAgain={onReset} />;
 }
