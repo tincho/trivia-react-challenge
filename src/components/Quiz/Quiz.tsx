@@ -9,7 +9,7 @@ import ErrorMessage from '@/components/Quiz/ErrorMessage';
 
 type QuizViewProps = {
   status: 'idle' | 'loading' | 'error' | 'success';
-  errorMessage: string;
+  errorMessage?: string;
   goHome: () => void;
   question: QuestionData;
   totalQuestions: number;
@@ -18,7 +18,7 @@ type QuizViewProps = {
 };
 export function QuizView({
   status,
-  errorMessage,
+  errorMessage = '',
   goHome,
   question,
   totalQuestions,
@@ -37,6 +37,9 @@ export function QuizView({
     <Question question={question} totalQuestions={totalQuestions} questionNumber={questionNumber} onAnswer={onAnswer} />
   );
 }
+QuizView.defaultProps = {
+  errorMessage: '',
+};
 
 /**
  * you can see Quiz as a "connector"
