@@ -55,6 +55,12 @@ As the scope of the challenge was deliberately narrowed to only True/False quest
 
 All possible answers (the correct one + all the incorrects) are presented in shuffled order. This is why, for some questions you'll see True on the left and False on the right, and for some others you'll see them in reversed position. This looked sighly weird on the first sight but, after all, it's a Trivia game: you have to pay attention! 🙃
 
+* Extra feature: include user answers in Results view
+
+This wasn't included in the requirement but as I developed the app and played a few rounds (and have some friends play it while unknowingly acting as QA testers 😇) I noticed it would be good to see what my answers were.
+
+This way, it's not just a *win/lose* game but also a **learning** game. Without it, it felt kind of incomplete. It didn't cost much to add the feature therefore I took the liberty to add it 🪄
+
 
 * Screen/View handling
 
@@ -92,11 +98,6 @@ The double-mount would have been harmless in production. But in dev, given the A
 * Fetch libraries
 
 I'm very fond of using `useSWR` and/or `axios`. But since there's only one fetch per-run in this app, using bare native `fetch` seemed enough.
-
-* Extra feature: include user answers in Results view
-
-This wasn't included in the 
-
 
 ## Usage
 
