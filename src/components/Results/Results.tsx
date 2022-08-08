@@ -14,7 +14,7 @@ type ResultsViewProps = {
   playAgain: () => void;
 };
 
-function ResultsView({ score, questions = [], playAgain }: ResultsViewProps) {
+export function ResultsView({ score, questions = [], playAgain }: ResultsViewProps) {
   return (
     <>
       <header>
