@@ -10,10 +10,3 @@ describe('Render the app correctly', () => {
     expect(app).toBeInTheDocument();
   });
 });
-
-describe('view choosing', () => {
-  test('default view is home', async () => {
-    render(<App />);
-    // mmm...?
-  });
-});
